@@ -147,12 +147,14 @@ def plot(mp):
 
 
 def main():
+    global YEARS
+    
     if len(sys.argv) > 2:
         start_year = int(sys.argv[1])
         stop_year = int(sys.argv[2])
     else:
-        start_year = min(YEAR)
-        stop_year = max(YEAR) + 1
+        start_year = min(YEARS)
+        stop_year = max(YEARS) + 1
     YEARS = range(start_year, stop_year)
     
     print 'Running from %d to %d' % (start_year, stop_year)
@@ -164,6 +166,9 @@ def main():
     num_entries = 0
     m1 = 10000000
     m2 = 0
+    for m in MODELS:
+        print m,
+    print
     for year in YEARS:
         model_data = {}
         
@@ -184,9 +189,15 @@ def main():
             m2 = max(m2, numpy.max(deg_data))
         mean_data = numpy.mean(deg_datas, axis=0)
         diffs = [data - mean_data for data in deg_datas]
+        avg_diffs = [numpy.mean(data) for data in diffs]
+        print year,
         for d in diffs:
-            diffsq_sum = diffsq_sum + numpy.square(d)
+            dsq = numpy.square(d)
+            diffsq_sum = diffsq_sum + dsq
+            diffsq_mean = numpy.mean(dsq)
             num_entries += 1
+            print numpy.sqrt(diffsq_mean),
+        print
     
     #print m1, m2
     
